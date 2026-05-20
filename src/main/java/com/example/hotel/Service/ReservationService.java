@@ -25,13 +25,32 @@ public class ReservationService {
     public ReservationService(HotelRepository hotelRepository, BookingRepository bookingRepository) {
         this.hotelRepository = hotelRepository;
         this.bookingRepository = bookingRepository;
-    }
+        }
     public ReservationResponseDTO makeReservation(ReservationRequestDTO request) {
         int weekdayCount = 0;
         int weekendCount = 0;
         String input = request.getRawInput();
+
+        if (input == null || input.trim().isEmpty()) {
+        throw new IllegalArgumentException("Input cannot be empty. Expected format: 'CustomerType: 1Dec2025, 2Dec2025'");
+        }
+        if (!input.contains(":")) {
+        throw new IllegalArgumentException("Missing colon separator. Expected format: 'CustomerType: 1Dec2025, 2Dec2025'");
+        }
+
         String[] parts = input.split(":");
         String customerType = parts[0].trim();
+    
+        if (!customerType.equalsIgnoreCase("Regular") && 
+        !customerType.equalsIgnoreCase("Reward") && 
+        !customerType.equalsIgnoreCase("Rewards")) {
+        throw new IllegalArgumentException("Invalid customer type. Must be 'Regular' or 'Reward'.");
+        }
+
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+        throw new IllegalArgumentException("No dates provided after the colon.");
+        }
+
         String[] dateParts = parts[1].split(",");
         List<LocalDate> dates = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dMMMyyyy", Locale.ENGLISH);
