@@ -1,5 +1,6 @@
 package com.example.hotel.controller;
 
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -7,9 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,28 +17,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
 import com.example.hotel.dto.HotelResponseDTO;
 import com.example.hotel.dto.ReservationRequestDTO;
 import com.example.hotel.dto.ReservationResponseDTO;
 import com.example.hotel.service.ReservationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@SpringBootTest
 
-@Transactional
-@ActiveProfiles("test")
-
-//@WebMvcTest(ReservationController.class)
-@AutoConfigureMockMvc
+@WebMvcTest(ReservationController.class)
 public class ReservationControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
+
+private ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
     @MockitoBean
     private ReservationService reservationService;
-    @Autowired
-    private ObjectMapper objectMapper;
     @Test
     public void testBookHotel() throws Exception {
         ReservationRequestDTO reservationrequest = new ReservationRequestDTO();
@@ -81,8 +76,7 @@ public class ReservationControllerTest {
                 .content(objectMapper.writeValueAsString(reservationrequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value("400 BAD REQUEST"))                
-                .andExpect(content().string("Invalid customer type. Expected 'Regular' or 'Rewards'."));
-    }
+                .andExpect(jsonPath("$.message").value("Invalid customer type. Expected 'Regular' or 'Rewards'."));    }
 
     @Test
     public void testGetAvailableHotels() throws Exception {
