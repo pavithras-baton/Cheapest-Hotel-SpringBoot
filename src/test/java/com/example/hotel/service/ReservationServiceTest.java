@@ -36,12 +36,12 @@ public class ReservationServiceTest {
         Hotel expensiveHotel = new Hotel();
         expensiveHotel.setName("Expensive");
         expensiveHotel.setTotalRooms(5);
-        expensiveHotel.setWeekdayRegular(500);
+        expensiveHotel.setWeekdayRegular(500.0);
 
         Hotel cheapHotel = new Hotel();
         cheapHotel.setName("Cheap");
         cheapHotel.setTotalRooms(5);
-        cheapHotel.setWeekdayRegular(100);
+        cheapHotel.setWeekdayRegular(100.0);
         
         when(hotelRepository.findAll()).thenReturn(List.of(expensiveHotel, cheapHotel));
         when(bookingRepository.countOverlappingBookings(any(), any(), any())).thenReturn(0);
@@ -62,8 +62,8 @@ public class ReservationServiceTest {
         Hotel hotel = new Hotel();
         hotel.setName("Reward Hotel");
         hotel.setTotalRooms(5);
-        hotel.setWeekdayRegular(500); // Very expensive for regular
-        hotel.setWeekdayReward(50);   // Very cheap for rewards
+        hotel.setWeekdayRegular(500.0); // Very expensive for regular
+        hotel.setWeekdayReward(50.0);   // Very cheap for rewards
         
         when(hotelRepository.findAll()).thenReturn(List.of(hotel));
         when(bookingRepository.countOverlappingBookings(any(), any(), any())).thenReturn(0);
@@ -85,13 +85,13 @@ public class ReservationServiceTest {
         lowRated.setName("Low Rated Hotel");
         lowRated.setRating(2);
         lowRated.setTotalRooms(5);
-        lowRated.setWeekdayRegular(100);
+        lowRated.setWeekdayRegular(100.0);
 
         Hotel highRated = new Hotel();
         highRated.setName("High Rated Hotel");
         highRated.setRating(5);
         highRated.setTotalRooms(5);
-        highRated.setWeekdayRegular(100); 
+        highRated.setWeekdayRegular(100.0); 
         
         when(hotelRepository.findAll()).thenReturn(List.of(lowRated, highRated));
         when(bookingRepository.countOverlappingBookings(any(), any(), any())).thenReturn(0);

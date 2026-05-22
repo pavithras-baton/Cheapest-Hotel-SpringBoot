@@ -1,5 +1,5 @@
 package com.example.hotel.entity;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,10 +16,22 @@ public class Hotel {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+    
     private String name;
     private int rating;
-    private int weekdayRegular, weekendRegular;
-    private int weekdayReward, weekendReward;
-    private int totalRooms = 2;
     
+    @Column(name="total_rooms") 
+    private int totalRooms = 2;
+
+    @Column(name="weekday_regular")
+    private Double weekdayRegular; 
+
+    @Column(name="weekend_regular")
+    private Double weekendRegular;
+
+    @Column(name="weekday_reward")
+    private Double weekdayReward;
+
+    @Column(name="weekend_reward")
+    private Double weekendReward;
 }

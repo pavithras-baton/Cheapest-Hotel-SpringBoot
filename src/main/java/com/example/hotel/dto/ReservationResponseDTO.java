@@ -3,7 +3,7 @@ import lombok.Data;
 @Data
 public class ReservationResponseDTO {
     private String hotelName;
-    private int totalCost;
+    private double totalCost;
     private int rating;
     private String message;
     

@@ -54,15 +54,15 @@ public class ReservationService {
 
         List<Hotel> hotels = hotelRepository.findAll();
         Hotel cheapestHotel = null;
-        int minCost = Integer.MAX_VALUE;
+        double minCost = Double.MAX_VALUE;
         for (Hotel hotel : hotels) {
             int overlapCount = bookingRepository.countOverlappingBookings(hotel.getId(), checkIn, checkOut);
             if (overlapCount < hotel.getTotalRooms()) {
-                int cost = 0;
+                double cost = 0;
                 if (customerType.equalsIgnoreCase("Regular")) {
-                    cost = weekdayCount * hotel.getWeekdayRegular() + weekendCount * hotel.getWeekendRegular();
+                    cost = (double) weekdayCount * hotel.getWeekdayRegular() + (double) weekendCount * hotel.getWeekendRegular();
                 } else if (customerType.equalsIgnoreCase("Rewards")) {
-                    cost = weekdayCount * hotel.getWeekdayReward() + weekendCount * hotel.getWeekendReward();
+                    cost = (double) weekdayCount * hotel.getWeekdayReward() + (double) weekendCount * hotel.getWeekendReward();
                 }
                 if (cost < minCost) {
                     minCost = cost;

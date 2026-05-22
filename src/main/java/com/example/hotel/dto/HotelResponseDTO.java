@@ -6,9 +6,9 @@ public class HotelResponseDTO {
     private Long id;
     private String hotelName;
     private int rating;
-    private int weekdayRegular;
-    private int weekendRegular;
-    private int weekdayReward;
-    private int weekendReward;
+    private double weekdayRegular;
+    private double weekendRegular;
+    private double weekdayReward;
+    private double weekendReward;
 
 }
