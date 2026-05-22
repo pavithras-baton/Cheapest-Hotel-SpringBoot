@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.example.hotel.Entity.Hotel;
+import com.example.hotel.entity.Hotel;
 import com.example.hotel.repository.HotelRepository;
 
 @SpringBootApplication

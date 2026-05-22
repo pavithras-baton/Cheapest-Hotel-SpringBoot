@@ -1,18 +1,17 @@
-package com.example.hotel.Service;
+package com.example.hotel.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.stereotype.Service;
 
-import com.example.hotel.Entity.Booking;
-import com.example.hotel.Entity.Hotel;
+import com.example.hotel.dto.HotelResponseDTO;
 import com.example.hotel.dto.ReservationRequestDTO;
 import com.example.hotel.dto.ReservationResponseDTO;
+import com.example.hotel.entity.Booking;
+import com.example.hotel.entity.Hotel;
 import com.example.hotel.repository.BookingRepository;
 import com.example.hotel.repository.HotelRepository;
 
@@ -29,34 +28,21 @@ public class ReservationService {
     public ReservationResponseDTO makeReservation(ReservationRequestDTO request) {
         int weekdayCount = 0;
         int weekendCount = 0;
-        String input = request.getRawInput();
+        String customerType = request.getCustomerType();
+        LocalDate checkIn = request.getCheckInDate();
+        LocalDate checkOut = request.getCheckOutDate();
 
-        if (input == null || input.trim().isEmpty()) {
-        throw new IllegalArgumentException("Input cannot be empty. Expected format: 'CustomerType: 1Dec2025, 2Dec2025'");
-        }
-        if (!input.contains(":")) {
-        throw new IllegalArgumentException("Missing colon separator. Expected format: 'CustomerType: 1Dec2025, 2Dec2025'");
-        }
-
-        String[] parts = input.split(":");
-        String customerType = parts[0].trim();
-    
-        if (!customerType.equalsIgnoreCase("Regular") && 
-        !customerType.equalsIgnoreCase("Reward") && 
-        !customerType.equalsIgnoreCase("Rewards")) {
-        throw new IllegalArgumentException("Invalid customer type. Must be 'Regular' or 'Reward'.");
+        if (customerType == null || 
+           (!customerType.equalsIgnoreCase("Regular") && 
+            !customerType.equalsIgnoreCase("Rewards"))) {
+            throw new IllegalArgumentException("Invalid customer type. Expected 'Regular' or 'Rewards'.");
         }
 
-        if (parts.length < 2 || parts[1].trim().isEmpty()) {
-        throw new IllegalArgumentException("No dates provided after the colon.");
+        if (checkIn == null || checkOut == null || !checkIn.isBefore(checkOut)) {
+            throw new IllegalArgumentException("Check-in date must be before check-out date.");
         }
 
-        String[] dateParts = parts[1].split(",");
-        List<LocalDate> dates = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dMMMyyyy", Locale.ENGLISH);
-        for (String datePart : dateParts) {
-            LocalDate date = LocalDate.parse(datePart.trim(), formatter);
-            dates.add(date);
+        for (LocalDate date = checkIn; date.isBefore(checkOut); date = date.plusDays(1)) {
             DayOfWeek dayOfWeek = date.getDayOfWeek();
             if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
                 weekendCount++;
@@ -65,8 +51,7 @@ public class ReservationService {
                 weekdayCount++;
             }
         }
-        LocalDate checkIn = dates.get(0);
-        LocalDate checkOut = dates.get(dates.size() - 1).plusDays(1);
+
         List<Hotel> hotels = hotelRepository.findAll();
         Hotel cheapestHotel = null;
         int minCost = Integer.MAX_VALUE;
@@ -76,7 +61,7 @@ public class ReservationService {
                 int cost = 0;
                 if (customerType.equalsIgnoreCase("Regular")) {
                     cost = weekdayCount * hotel.getWeekdayRegular() + weekendCount * hotel.getWeekendRegular();
-                } else if (customerType.equalsIgnoreCase("Reward")) {
+                } else if (customerType.equalsIgnoreCase("Rewards")) {
                     cost = weekdayCount * hotel.getWeekdayReward() + weekendCount * hotel.getWeekendReward();
                 }
                 if (cost < minCost) {
@@ -106,5 +91,24 @@ public class ReservationService {
             response.setMessage("No available hotels for the given dates");
         }
         return response;
-}
+    }
+    public List<HotelResponseDTO> getAllHotels() {
+        List<Hotel> rawHotels = hotelRepository.findAll();
+        
+    
+        List<HotelResponseDTO> safeHotels = new ArrayList<>();
+        for (Hotel hotel : rawHotels) {
+            HotelResponseDTO dto = new HotelResponseDTO();
+            dto.setId(hotel.getId());
+            dto.setHotelName(hotel.getName());
+            dto.setRating(hotel.getRating());
+            dto.setWeekdayRegular(hotel.getWeekdayRegular());
+            dto.setWeekendRegular(hotel.getWeekendRegular());
+            dto.setWeekdayReward(hotel.getWeekdayReward());
+            dto.setWeekendReward(hotel.getWeekendReward());
+            
+            safeHotels.add(dto);
+        }
+        return safeHotels;
+    }
 }
