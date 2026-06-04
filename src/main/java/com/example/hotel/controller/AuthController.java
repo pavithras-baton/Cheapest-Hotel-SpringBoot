@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.hotel.dto.AuthResponseDTO;
+import com.example.hotel.dto.LoginRequestDTO;
 import com.example.hotel.dto.RegisterRequestDTO;
 import com.example.hotel.service.AuthService;     
 @RestController
@@ -17,8 +19,9 @@ public class AuthController {
         this.authService = authService;
     }
     @PostMapping("/login")
-    public ResponseEntity<String> login() {
-        return ResponseEntity.ok("Login successful!");
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
+    AuthResponseDTO response = authService.login(request);
+    return ResponseEntity.ok(response);
     }
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO request) {

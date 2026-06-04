@@ -23,15 +23,15 @@ public class Hotel {
     @Column(name="total_rooms") 
     private int totalRooms = 2;
 
-    @Column(name = "regular_weekday_price")
+    @Column(name = "weekday_regular")
     private double regularWeekdayPrice;
 
-    @Column(name = "regular_weekend_price")
+    @Column(name = "weekend_regular")
     private double regularWeekendPrice;
 
-    @Column(name = "reward_weekday_price")
+    @Column(name = "weekday_reward")
     private double rewardWeekdayPrice;
 
-    @Column(name = "reward_weekend_price")
+    @Column(name = "weekend_reward")
     private double rewardWeekendPrice;
 }

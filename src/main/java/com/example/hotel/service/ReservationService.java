@@ -60,9 +60,9 @@ public class ReservationService {
             if (overlapCount < hotel.getTotalRooms()) {
                 double cost = 0;
                 if (customerType.equalsIgnoreCase("Regular")) {
-                    cost = (double) weekdayCount * hotel.getWeekdayRegular() + (double) weekendCount * hotel.getWeekendRegular();
+                    cost = (double) weekdayCount * hotel.getRegularWeekdayPrice() + (double) weekendCount * hotel.getRegularWeekendPrice();
                 } else if (customerType.equalsIgnoreCase("Rewards")) {
-                    cost = (double) weekdayCount * hotel.getWeekdayReward() + (double) weekendCount * hotel.getWeekendReward();
+                    cost = (double) weekdayCount * hotel.getRewardWeekdayPrice() + (double) weekendCount * hotel.getRewardWeekendPrice();
                 }
                 if (cost < minCost) {
                     minCost = cost;
@@ -102,10 +102,10 @@ public class ReservationService {
             dto.setId(hotel.getId());
             dto.setHotelName(hotel.getName());
             dto.setRating(hotel.getRating());
-            dto.setWeekdayRegular(hotel.getWeekdayRegular());
-            dto.setWeekendRegular(hotel.getWeekendRegular());
-            dto.setWeekdayReward(hotel.getWeekdayReward());
-            dto.setWeekendReward(hotel.getWeekendReward());
+            dto.setWeekdayRegular(hotel.getRegularWeekdayPrice());
+            dto.setWeekendRegular(hotel.getRegularWeekendPrice());
+            dto.setWeekdayReward(hotel.getRewardWeekdayPrice());
+            dto.setWeekendReward(hotel.getRewardWeekendPrice());
             
             safeHotels.add(dto);
         }
