@@ -11,7 +11,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;   
-
+import org.springframework.security.core.userdetails.UserDetailsService;
 import com.example.hotel.dto.AuthResponseDTO;
 import com.example.hotel.dto.LoginRequestDTO;
 import com.example.hotel.dto.RegisterRequestDTO;
@@ -24,12 +24,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AuthControllerTest {
     @Autowired
     public MockMvc mockMvc;
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+
     @MockitoBean
+
     private AuthService authService;
     @MockitoBean
     private com.example.hotel.service.JwtService jwtService;
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockitoBean
+    private UserDetailsService userDetailsService;
+    
     private RegisterRequestDTO registerRequest;
     private LoginRequestDTO loginRequest;
     private AuthResponseDTO mockAuthResponse;
