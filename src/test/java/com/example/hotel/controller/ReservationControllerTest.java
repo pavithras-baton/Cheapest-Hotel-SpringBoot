@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -26,14 +27,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @WebMvcTest(ReservationController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class ReservationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-private ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
     @MockitoBean
     private ReservationService reservationService;
+    @MockitoBean
+    private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
+    @MockitoBean
+    private com.example.hotel.service.JwtService jwtService;
     @Test
     public void testBookHotel() throws Exception {
         ReservationRequestDTO reservationrequest = new ReservationRequestDTO();
